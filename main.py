@@ -18,7 +18,8 @@ alphabet = string.ascii_uppercase
 colors = []
 current_guess = []
 opponents_list = []
-players_previous_guesses = {}
+previous_guesses_dic = {}
+
 
 
 #shortcut to make a random nr
@@ -75,6 +76,9 @@ def convert_input():
         player_input = input("input:")
         if len(player_input) == board_size and player_input.isalpha():
             player_input = player_input.upper()
+            round_turn = "turn" + str(turn_nr)
+
+            previous_guesses_dic[round_turn] = player_input
             clean_input[:0] = player_input
             return clean_input
         else:
@@ -85,17 +89,10 @@ def present_and_receive_input():
     div()
     print("Please enter your guess:\n use format \"ABCD\"\n Available colors:")
     print_result(colors)
-    print_previous_guesses()
-
+    for turn in previous_guesses_dic.values():
+        print_result(turn)
     guess = [convert_input()]
-
     return guess
-
-
-def print_previous_guesses():
-    for turn in range(turn_nr):
-        pturn = ("turn" + str(turn))
-        print_result(players_previous_guesses.values(pturn))
 
 
 opponents_colors_to_guess()
@@ -108,9 +105,11 @@ while current_guess != opponents_list:
     #create_previous_guess_dic()
 
     current_guess = present_and_receive_input()
-    players_previous_guesses["turn" + str(turn_nr)] = current_guess
+    print(previous_guesses_dic)
+    #players_previous_guesses["turn" + str(turn_nr)] = current_guess
     print("currents guess")
-    print_result(current_guess)
+    print(current_guess)
+    turn_nr += 1
 #print(colors)
 
 
