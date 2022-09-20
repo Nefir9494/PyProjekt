@@ -31,22 +31,11 @@ def print_result(list_to_print):
     print("||{}||".format(".".join(list_to_print)))
 
 
-def print_result1(list_to_print):
-    print(f"||{*list_to_print,}||")
-
-
 def checklist(test_value, testlist):
     if test_value not in testlist:
-        #print("does not contains " + test_value)
         return True
     else:
-        #print(" contains " + test_value)
         return False
-
-
-#making the actual list of available colors
-for i in range(number_of_available_colors):
-    colors.append(alphabet[i])
 
 
 def div():
@@ -59,7 +48,6 @@ def opponents_colors_to_guess():
     iter_to_unique = 0
     while iter_to_unique < board_size:
         value = (colors[ran_nr()])
-        #print(value)
         if checklist(value, temp_1):
             temp_1.insert(iter_to_unique, value)
             opponents_list.append(value)
@@ -77,7 +65,6 @@ def convert_input():
         if len(player_input) == board_size and player_input.isalpha():
             player_input = player_input.upper()
             round_turn = "turn" + str(turn_nr)
-
             previous_guesses_dic[round_turn] = player_input
             clean_input[:0] = player_input
             return clean_input
@@ -91,25 +78,26 @@ def present_and_receive_input():
     print_result(colors)
     for turn in previous_guesses_dic.values():
         print_result(turn)
+    div()
     guess = [convert_input()]
     return guess
 
 
+#making the actual list of available colors
+for i in range(number_of_available_colors):
+    colors.append(alphabet[i])
 opponents_colors_to_guess()
 
+#debug for at checke om gæt er korrekt
+div()
+print("opponents guess:")
+print_result(opponents_list)
+div()
+
+
 while current_guess != opponents_list:
-
-    div()
-    print("opponents guess:")
-    print_result(opponents_list)
-    #create_previous_guess_dic()
-
     current_guess = present_and_receive_input()
-    print(previous_guesses_dic)
-    #players_previous_guesses["turn" + str(turn_nr)] = current_guess
-    print("currents guess")
-    print(current_guess)
     turn_nr += 1
-#print(colors)
+
 
 
