@@ -19,8 +19,7 @@ colors = []
 current_guess = []
 opponents_list = []
 previous_guesses_dic = {}
-
-
+spacer = "      "
 
 #shortcut to make a random nr
 def ran_nr():
@@ -28,7 +27,7 @@ def ran_nr():
 
 
 def print_result(list_to_print):
-    print("||{}||".format(".".join(list_to_print)))
+    return "||{}||".format(".".join(list_to_print))
 
 
 def checklist(test_value, testlist):
@@ -39,7 +38,7 @@ def checklist(test_value, testlist):
 
 
 def div():
-    print("-" * 20)
+    print(spacer + "-" * ((board_size * 2) + 12))
 
 
 def opponents_colors_to_guess():
@@ -65,38 +64,74 @@ def convert_input():
         if len(player_input) == board_size and player_input.isalpha():
             player_input = player_input.upper()
             round_turn = "turn" + str(turn_nr)
-            previous_guesses_dic[round_turn] = player_input
+            previous_guesses_dic[round_turn] = print_result(player_input)
             clean_input[:0] = player_input
             return clean_input
         else:
             print("Wrong syntax for inputs")
 
 
-def present_and_receive_input():
+def present_input():
     div()
     print("Please enter your guess:\n use format \"ABCD\"\n Available colors:")
-    print_result(colors)
+    print(spacer + print_result(colors))
+    if turn_nr != 0:
+        div()
     for turn in previous_guesses_dic.values():
-        print_result(turn)
+        print(spacer + turn)
     div()
-    guess = [convert_input()]
-    return guess
+    #guess = convert_input()
+   # return guess
+
+
+def feedback_guess():
+    pos = xpos1 = xpos2 = 0
+    feedback = ["none", "none", "none", "none"]
+    new_guess = current_guess.copy()
+    solution = opponents_list.copy()
+    while pos < board_size:
+        if new_guess[pos] == solution[pos]:
+            feedback[pos] = "P"
+            new_guess[pos] = solution[pos] = "none"
+        pos += 1
+    while xpos1 < len(new_guess):
+        while xpos2 < len(solution):
+            if new_guess[xpos1] == solution[xpos2] and (new_guess[xpos1] != "none"):
+                feedback[xpos1] = "C"
+                new_guess[xpos1] = solution[xpos2] = "none"
+                xpos2 = len(solution)
+            else:
+                xpos2 += 1
+        xpos2 = 0
+        xpos1 += 1
+    con_feedback = "%sxP %sxC"%((feedback.count("P")), (feedback.count("C")))
+    return con_feedback
+
+
+
 
 
 #making the actual list of available colors
-for i in range(number_of_available_colors):
-    colors.append(alphabet[i])
+for letter in range(number_of_available_colors):
+    colors.append(alphabet[letter])
 opponents_colors_to_guess()
 
 #debug for at checke om gæt er korrekt
 div()
 print("opponents guess:")
-print_result(opponents_list)
+print(print_result(opponents_list))
 div()
 
 
-while current_guess != opponents_list:
-    current_guess = present_and_receive_input()
+while True: # current_guess != opponents_list:
+
+    present_input()
+    current_guess = convert_input()
+    feed = feedback_guess()
+    previous_guesses_dic["turn" + str(turn_nr)] = str(previous_guesses_dic["turn" + str(turn_nr)] + feed + "||")
+        #print(feedback_guess())
+    #print(current_guess)
+
     turn_nr += 1
 
 
