@@ -30,6 +30,10 @@ def print_result(list_to_print):
     print("||{}||".format(".".join(list_to_print)))
 
 
+def print_result1(list_to_print):
+    print(f"||{*list_to_print,}||")
+
+
 def checklist(test_value, testlist):
     if test_value not in testlist:
         #print("does not contains " + test_value)
