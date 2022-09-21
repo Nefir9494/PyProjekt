@@ -20,6 +20,8 @@ current_guess = []
 opponents_list = []
 previous_guesses_dic = {}
 spacer = "      "
+game_state = True
+#feed = ""
 
 #shortcut to make a random nr
 def ran_nr():
@@ -108,7 +110,13 @@ def feedback_guess():
     return con_feedback
 
 
-
+def check_victory(wincon):
+    if wincon == "4xP 0xC":
+        return "victory"
+    if turn_nr == number_of_turns:
+        return "defeat"
+    else:
+        return True
 
 
 #making the actual list of available colors
@@ -123,16 +131,19 @@ print(print_result(opponents_list))
 div()
 
 
-while True: # current_guess != opponents_list:
+while game_state: # current_guess != opponents_list:
 
     present_input()
     current_guess = convert_input()
     feed = feedback_guess()
+    print(feed)
     previous_guesses_dic["turn" + str(turn_nr)] = str(previous_guesses_dic["turn" + str(turn_nr)] + feed + "||")
         #print(feedback_guess())
     #print(current_guess)
 
+    game_state = check_victory(feed)
     turn_nr += 1
+
 
 
 
