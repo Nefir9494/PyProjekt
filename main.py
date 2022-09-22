@@ -112,9 +112,9 @@ def feedback_guess():
 
 def check_victory(wincon):
     if wincon == "4xP 0xC":
-        return "victory"
+        return "Won"
     if turn_nr == number_of_turns:
-        return "defeat"
+        return "Lost"
     else:
         return True
 
@@ -131,19 +131,24 @@ print(print_result(opponents_list))
 div()
 
 
-while game_state: # current_guess != opponents_list:
+while game_state == True: # current_guess != opponents_list:
 
     present_input()
     current_guess = convert_input()
     feed = feedback_guess()
     print(feed)
+
     previous_guesses_dic["turn" + str(turn_nr)] = str(previous_guesses_dic["turn" + str(turn_nr)] + feed + "||")
         #print(feedback_guess())
     #print(current_guess)
-
-    game_state = check_victory(feed)
     turn_nr += 1
+    game_state = check_victory(feed)
+    print(game_state)
 
+print("You %s!!"%game_state)
+div()
+for turn in previous_guesses_dic.values():
+    print(spacer + turn)
 
 
 
