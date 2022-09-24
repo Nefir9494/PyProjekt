@@ -1,25 +1,15 @@
-
-#mod spiller = opret kode der skal gemmes med op til 2 kopier
-
-#input af spillerens gæt
-
-#afklar hvordan det matcher op mod koden
-
-#Check om der er 2 af samme farve
-
-#giv svar tilbage og vis tavlen med alle svar
 import string
 import random
 from os import system, name
-#Customise difficulty variables
-#-----------------------
+# Customise difficulty variables
+# -----------------------
 number_of_available_colors = 8
 board_size = 4
 number_of_turns = 3
 Show_Answer = False
-#-----------------------
+# -----------------------
 
-#Variables used throughout the game
+# Variables used throughout the game
 turn_nr = 0
 alphabet = string.ascii_uppercase
 colors = []
@@ -30,12 +20,12 @@ spacer = "      "
 game_state = True
 
 
-#Lav en liste til printbar string
+# Lav en liste til printbar string
 def print_result(list_to_print):
     return "||{}||".format(".".join(list_to_print))
 
 
-#check om værdi ikke er i en liste
+# Check om værdi ikke er i en liste
 def checklist(test_value, testlist):
     if test_value not in testlist:
         return True
@@ -43,12 +33,12 @@ def checklist(test_value, testlist):
         return False
 
 
-#Pynt til lave et passende antal bindestreger
+# Pynt til lave et passende antal bindestreger
 def div():
     print(spacer + "-" * ((board_size * 2) + 12))
 
 
-#clearer consollen - virker ikke i pycharm
+# Clear Konsol - virker ikke i pycharm kaster error
 def clear():
     if name == 'nt':
         _ = system('cls')
@@ -56,7 +46,7 @@ def clear():
         _ = system('clear')
 
 
-#Oprettelse af farvekombiantion som skal gættes- det er kun tilladt at der er op til 2 unique
+# Oprettelse af farvekombiantion som skal gættes- det er kun tilladt at der er op til 2 unique
 def opponents_colors_to_guess():
     temp_1 = []
     temp_2 = []
@@ -73,6 +63,7 @@ def opponents_colors_to_guess():
             iter_to_unique += 1
 
 
+# Retter bruger input til korrekt format
 def convert_input():
     clean_input = []
     while True:
@@ -87,6 +78,7 @@ def convert_input():
             print("Wrong syntax for inputs")
 
 
+# Præsentere spilbrættet
 def present_input():
     div()
     print("Please enter your guess:\n Use format \"ABCD\"\n Available colors:")
@@ -96,23 +88,24 @@ def present_input():
     for turn in previous_guesses_dic.values():
         print(spacer + turn)
     div()
-    #guess = convert_input()
-   # return guess
 
 
+# Check på hvor korrekt spillerens svar er
 def feedback_guess():
     pos = xpos1 = xpos2 = 0
     feedback = []
     new_guess = current_guess.copy()
     solution = opponents_list.copy()
+    # Fylder liste med korrekt antal "tomme" felter
     for x in range(board_size):
         feedback.append("none")
-    #print(print_result(feedback))
+    # Checker efter korrekt placering og farve og markere med "P"
     while pos < board_size:
         if new_guess[pos] == solution[pos]:
             feedback[pos] = "P"
             new_guess[pos] = solution[pos] = "none"
         pos += 1
+    # Checker efter forkert placering og korrekt farve og markere med "C"
     while xpos1 < len(new_guess):
         while xpos2 < len(solution):
             if new_guess[xpos1] == solution[xpos2] and (new_guess[xpos1] != "none"):
@@ -123,10 +116,12 @@ def feedback_guess():
                 xpos2 += 1
         xpos2 = 0
         xpos1 += 1
-    con_feedback = "%sxP %sxC"%((feedback.count("P")), (feedback.count("C")))
+    # Feedback - hvor det kun er antal af "P" og "C" og ikke placring der bliver udleveret
+    con_feedback = "%sxP %sxC" % ((feedback.count("P")), (feedback.count("C")))
     return con_feedback
 
 
+# Check om spillet skal forsætte
 def check_victory(wincon):
     if wincon == opponents_list:
         return "Won"
@@ -136,14 +131,15 @@ def check_victory(wincon):
         return True
 
 
+# Start på spillet
 clear()
-#making the actual list of available colors
+# Making the actual list of available colors
 for letter in range(number_of_available_colors):
     colors.append(alphabet[letter])
 opponents_colors_to_guess()
 
 
-#debug for at checke om gæt er korrekt
+# Debug for at checke om gæt er korrekt
 if Show_Answer:
     div()
     print("Opponents guess:")
@@ -152,25 +148,23 @@ if Show_Answer:
 
 print("Welcome to MasterMind")
 print("You have " + str(number_of_turns) + " tries")
-#True er specificeret for at kunne acceptere andre gamestates
-while game_state == True:
 
+# Primært gameloop
+# True er specificeret for at kunne acceptere andre gamestates
+while game_state == True:
     present_input()
     current_guess = convert_input()
     feed = feedback_guess()
-    #print(feed)
-
+    # Sætter feedback sammen med den eksisterende data i dictionary
     previous_guesses_dic["turn" + str(turn_nr)] = str(previous_guesses_dic["turn" + str(turn_nr)] + feed + "||")
-        #print(feedback_guess())
-    #print(current_guess)
     turn_nr += 1
     game_state = check_victory(current_guess)
     clear()
-    #print(game_state)
 
+# Afslutning på spillet og afsløring af resultat hvis det er tabt
 div()
 div()
-print(spacer + "You %s!!"%game_state)
+print(spacer + "You %s!!" % game_state)
 if game_state == "Lost":
     print(spacer + "Try again")
     print("Correct Solution:\n" + spacer + print_result(opponents_list))
