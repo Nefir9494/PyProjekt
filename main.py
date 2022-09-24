@@ -3,9 +3,9 @@ import random
 from os import system, name
 # Customise difficulty variables and user modes
 # -----------------------
-number_of_available_colors = 8
-board_size = 4
-number_of_turns = 8
+number_of_available_colors = 26
+board_size = 52
+number_of_turns = 99999999
 show_Answer = False
 pycharm_mode = True
 # -----------------------
