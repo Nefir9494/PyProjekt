@@ -12,7 +12,7 @@ import string
 import random
 number_of_available_colors = 8
 board_size = 4
-number_of_turns = 8
+number_of_turns = 2
 turn_nr = 0
 alphabet = string.ascii_uppercase
 colors = []
@@ -22,6 +22,7 @@ previous_guesses_dic = {}
 spacer = "      "
 game_state = True
 #feed = ""
+
 
 #shortcut to make a random nr
 def ran_nr():
@@ -75,8 +76,8 @@ def convert_input():
 
 def present_input():
     div()
-    print("Please enter your guess:\n use format \"ABCD\"\n Available colors:")
-    print(spacer + print_result(colors))
+    print("Please enter your guess:\n Use format \"ABCD\"\n Available colors:")
+    print(("Turn: " + str(turn_nr) + " ") + print_result(colors))
     if turn_nr != 0:
         div()
     for turn in previous_guesses_dic.values():
@@ -88,9 +89,12 @@ def present_input():
 
 def feedback_guess():
     pos = xpos1 = xpos2 = 0
-    feedback = ["none", "none", "none", "none"]
+    feedback = []
     new_guess = current_guess.copy()
     solution = opponents_list.copy()
+    for x in range(board_size):
+        feedback.append("none")
+    #print(print_result(feedback))
     while pos < board_size:
         if new_guess[pos] == solution[pos]:
             feedback[pos] = "P"
@@ -111,7 +115,7 @@ def feedback_guess():
 
 
 def check_victory(wincon):
-    if wincon == "4xP 0xC":
+    if wincon == opponents_list:
         return "Won"
     if turn_nr == number_of_turns:
         return "Lost"
@@ -126,7 +130,7 @@ opponents_colors_to_guess()
 
 #debug for at checke om gæt er korrekt
 div()
-print("opponents guess:")
+print("Opponents guess:")
 print(print_result(opponents_list))
 div()
 
@@ -136,19 +140,24 @@ while game_state == True: # current_guess != opponents_list:
     present_input()
     current_guess = convert_input()
     feed = feedback_guess()
-    print(feed)
+    #print(feed)
 
     previous_guesses_dic["turn" + str(turn_nr)] = str(previous_guesses_dic["turn" + str(turn_nr)] + feed + "||")
         #print(feedback_guess())
     #print(current_guess)
     turn_nr += 1
-    game_state = check_victory(feed)
-    print(game_state)
+    game_state = check_victory(current_guess)
+    #print(game_state)
 
-print("You %s!!"%game_state)
 div()
+div()
+print(spacer + "You %s!!"%game_state)
+if game_state == "Lost":
+    print(spacer + "Try again")
+    print("Correct Solution:\n" + spacer + print_result(opponents_list))
+print("Previous Guess")
 for turn in previous_guesses_dic.values():
     print(spacer + turn)
-
+div()
 
 
