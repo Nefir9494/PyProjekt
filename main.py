@@ -1,12 +1,13 @@
 import string
 import random
 from os import system, name
-# Customise difficulty variables
+# Customise difficulty variables and user modes
 # -----------------------
 number_of_available_colors = 8
 board_size = 4
-number_of_turns = 3
-Show_Answer = False
+number_of_turns = 8
+show_Answer = False
+pycharm_mode = True
 # -----------------------
 
 # Variables used throughout the game
@@ -38,9 +39,11 @@ def div():
     print(spacer + "-" * ((board_size * 2) + 12))
 
 
-# Clear Konsol - virker ikke i pycharm kaster error
+# Clear Konsol - virker ikke i pycharm kaster error - kan skifte variable pycharm_mode for at fjerne fejl
 def clear():
-    if name == 'nt':
+    if pycharm_mode:
+        return
+    elif name == 'nt':
         _ = system('cls')
     else:
         _ = system('clear')
@@ -140,7 +143,7 @@ opponents_colors_to_guess()
 
 
 # Debug for at checke om gæt er korrekt
-if Show_Answer:
+if show_Answer:
     div()
     print("Opponents guess:")
     print(print_result(opponents_list))
