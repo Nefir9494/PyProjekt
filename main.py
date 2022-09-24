@@ -10,9 +10,16 @@
 #giv svar tilbage og vis tavlen med alle svar
 import string
 import random
+from os import system, name
+#Customise difficulty variables
+#-----------------------
 number_of_available_colors = 8
 board_size = 4
-number_of_turns = 2
+number_of_turns = 3
+Show_Answer = False
+#-----------------------
+
+#Variables used throughout the game
 turn_nr = 0
 alphabet = string.ascii_uppercase
 colors = []
@@ -21,18 +28,14 @@ opponents_list = []
 previous_guesses_dic = {}
 spacer = "      "
 game_state = True
-#feed = ""
 
 
-#shortcut to make a random nr
-def ran_nr():
-    return random.randint(0, number_of_available_colors - 1)
-
-
+#Lav en liste til printbar string
 def print_result(list_to_print):
     return "||{}||".format(".".join(list_to_print))
 
 
+#check om værdi ikke er i en liste
 def checklist(test_value, testlist):
     if test_value not in testlist:
         return True
@@ -40,16 +43,26 @@ def checklist(test_value, testlist):
         return False
 
 
+#Pynt til lave et passende antal bindestreger
 def div():
     print(spacer + "-" * ((board_size * 2) + 12))
 
 
+#clearer consollen - virker ikke i pycharm
+def clear():
+    if name == 'nt':
+        _ = system('cls')
+    else:
+        _ = system('clear')
+
+
+#Oprettelse af farvekombiantion som skal gættes- det er kun tilladt at der er op til 2 unique
 def opponents_colors_to_guess():
     temp_1 = []
     temp_2 = []
     iter_to_unique = 0
     while iter_to_unique < board_size:
-        value = (colors[ran_nr()])
+        value = (colors[random.randint(0, number_of_available_colors - 1)])
         if checklist(value, temp_1):
             temp_1.insert(iter_to_unique, value)
             opponents_list.append(value)
@@ -123,19 +136,24 @@ def check_victory(wincon):
         return True
 
 
+clear()
 #making the actual list of available colors
 for letter in range(number_of_available_colors):
     colors.append(alphabet[letter])
 opponents_colors_to_guess()
 
+
 #debug for at checke om gæt er korrekt
-div()
-print("Opponents guess:")
-print(print_result(opponents_list))
-div()
+if Show_Answer:
+    div()
+    print("Opponents guess:")
+    print(print_result(opponents_list))
+    div()
 
-
-while game_state == True: # current_guess != opponents_list:
+print("Welcome to MasterMind")
+print("You have " + str(number_of_turns) + " tries")
+#True er specificeret for at kunne acceptere andre gamestates
+while game_state == True:
 
     present_input()
     current_guess = convert_input()
@@ -147,6 +165,7 @@ while game_state == True: # current_guess != opponents_list:
     #print(current_guess)
     turn_nr += 1
     game_state = check_victory(current_guess)
+    clear()
     #print(game_state)
 
 div()
